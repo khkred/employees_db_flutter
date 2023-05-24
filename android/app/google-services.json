@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "984512396280",
+    "project_id": "empolyees-db-firebase",
+    "storage_bucket": "empolyees-db-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984512396280:android:2cdb019c09e0999772b40d",
+        "android_client_info": {
+          "package_name": "com.khkr.employees_db"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "984512396280-ht0oigkrscjbed1rr0qka8afp7kapfm8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDf7rSFuqEB8ezxW0cgI-maV6vNhyTE-0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "984512396280-ht0oigkrscjbed1rr0qka8afp7kapfm8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
