@@ -1,6 +1,7 @@
 import 'package:employees_db/models/employee.dart';
 import 'package:employees_db/screens/add_employee.dart';
 import 'package:employees_db/widgets/employee_card.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class EmployeeList extends StatefulWidget {
@@ -16,7 +17,18 @@ class _EmployeeListState extends State<EmployeeList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Employee List')),
+      appBar: AppBar(
+        title: const Text('Employee List'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              FirebaseAuth.instance.signOut();
+            },
+            icon:  Icon(Icons.logout,
+            color: Colors.deepPurple[200],),
+          ),
+        ],
+      ),
       body: ListView.builder(
         itemCount: employees.length,
         itemBuilder: (context, index) {
