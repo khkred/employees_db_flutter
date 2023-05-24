@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:employees_db/models/employee.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,19 @@ class _AddEmployeeState extends State<AddEmployee> {
   final TextEditingController _roleController = TextEditingController();
   final TextEditingController _departmentController = TextEditingController();
 
+  Future createEmployee(
+      {required Employee employee, required BuildContext context}) async {
+    final docUser =
+        FirebaseFirestore.instance.collection('employees').doc(employee.name);
+
+    final employeeJson = {
+      'name': employee.name,
+      'role': employee.role,
+      'department': employee.department,
+    };
+    await docUser.set(employeeJson);
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -25,6 +39,7 @@ class _AddEmployeeState extends State<AddEmployee> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(title: const Text('Add Employee')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -64,7 +79,7 @@ class _AddEmployeeState extends State<AddEmployee> {
               ),
               const SizedBox(height: 16.0),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     Employee newEmployee = Employee(
                       name: _nameController.text,
@@ -72,7 +87,10 @@ class _AddEmployeeState extends State<AddEmployee> {
                       department: _departmentController.text,
                     );
 
-                    Navigator.pop(context, newEmployee);
+                    await createEmployee(
+                        employee: newEmployee, context: context);
+
+                    Navigator.pop(context);
                   }
                 },
                 child: const Text('Submit'),

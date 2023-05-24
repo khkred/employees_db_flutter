@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:employees_db/models/employee.dart';
 import 'package:employees_db/screens/add_employee.dart';
 import 'package:employees_db/widgets/employee_card.dart';
@@ -12,11 +13,18 @@ class EmployeeList extends StatefulWidget {
 }
 
 class _EmployeeListState extends State<EmployeeList> {
-  List<Employee> employees = [];
 
+  Stream<List<Employee>> readEmployees() => FirebaseFirestore.instance
+      .collection('employees')
+      .snapshots()
+      .map((snapshot) => snapshot.docs.map((doc) => Employee.fromJson(doc.data())).toList());
+
+
+  Widget employeeCard(Employee employee) => EmployeeCard(employee: employee);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(
         title: const Text('Employee List'),
         actions: [
@@ -24,30 +32,37 @@ class _EmployeeListState extends State<EmployeeList> {
             onPressed: () {
               FirebaseAuth.instance.signOut();
             },
-            icon:  Icon(Icons.logout,
-            color: Colors.deepPurple[200],),
+            icon: Icon(
+              Icons.logout,
+              color: Colors.deepPurple[200],
+            ),
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: employees.length,
-        itemBuilder: (context, index) {
-          Employee employee = employees[index];
-          return EmployeeCard(employee: employee);
+      body: StreamBuilder(
+        stream: readEmployees(),
+        builder: (context,snapshot){
+          if(snapshot.hasData) {
+            final users = snapshot.data!;
+            return ListView(
+              children: users.map(employeeCard).toList(),
+            );
+          }
+          if(snapshot.hasData){
+            return Center(child: Text('Something went wrong! ${snapshot.error}'),);
+          }
+          else {
+            return const Center(child: CircularProgressIndicator(),);
+          }
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final newEmployee = await Navigator.push(
+        onPressed: ()  {
+          Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const AddEmployee()),
           );
 
-          if (newEmployee != null) {
-            setState(() {
-              employees.add(newEmployee);
-            });
-          }
         },
         child: const Icon(Icons.person_add_alt_rounded),
       ),
